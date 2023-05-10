@@ -59,6 +59,16 @@ async def next_episode(interaction):
     else:
         await interaction.responde.send_message(f"Time remaining: {remaining_hours} hour(s) and {remaining_minutes} minute(s)")
 
+#Is it Oshi No Ko Wednesday?
+@tree.command(name = "oshi?", description = "Oshi??")
+async def oshiM(interaction):
+    await interaction.response.send_message("OSHI????")
+    #send another message
+    await interaction.channel.send("OSHI NO KOOOOOOOOOOOOOOOOO!")
+
+
+
+
 @client.event
 async def on_ready():
     await tree.sync()
