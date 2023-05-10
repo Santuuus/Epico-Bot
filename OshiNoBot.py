@@ -1,7 +1,11 @@
 import datetime
 import discord
+import requests
+import random
+import os
+import re
 import schedule
-from config import TOKEN
+from config import TOKEN, MUSIXTOKEN
 from discord import app_commands
 from discord.ext import tasks
 
@@ -9,6 +13,7 @@ intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
+#Commands
 #Is it Oshi No Ko Wednesday?
 @tree.command(name = "oshi-no-ko-wednesday", description = "Is it Oshi No Ko Wednesday?")
 async def wednesday(interaction):
@@ -57,7 +62,50 @@ async def next_episode(interaction):
     if remaining_days > 0:
         await interaction.response.send_message(f"Time remaining: {remaining_days} day(s), {remaining_hours} hour(s), and {remaining_minutes} minute(s)")
     else:
-        await interaction.responde.send_message(f"Time remaining: {remaining_hours} hour(s) and {remaining_minutes} minute(s)")
+        await interaction.response.send_message(f"Time remaining: {remaining_hours} hour(s) and {remaining_minutes} minute(s)")
+
+@tree.command(name="conan-gray", description="Get a random line from a Conan Gray song (first 30%\ of the lyrics because API))")
+async def conan_gray(interaction):
+    artist_name = "Conan Gray"
+    # Make the request to the Musixmatch API to search for Conan Gray's songs
+    url = f"http://api.musixmatch.com/ws/1.1/track.search?apikey={MUSIXTOKEN}&q_artist={artist_name}"
+    response = requests.get(url)
+    data = response.json()
+
+    # Check if songs were found
+    if data["message"]["header"]["status_code"] == 200:
+        track_list = data["message"]["body"]["track_list"]
+        
+        if track_list:
+            # Select a random song from the track list
+            random_track = random.choice(track_list)
+            track_name = random_track["track"]["track_name"]
+            
+            # Make the request to the Musixmatch API to get the lyrics of the selected song
+            url = f"http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey={MUSIXTOKEN}&q_track={track_name}&q_artist={artist_name}"
+            response = requests.get(url)
+            data = response.json()
+            
+            # Check if lyrics were found
+            if data["message"]["header"]["status_code"] == 200:
+                lyrics = data["message"]["body"]["lyrics"]["lyrics_body"]
+                # Remove the final part of the lyrics starting from a line with "..."
+                lines = lyrics.split("\n")
+                ellipsis_index = next((i for i, line in enumerate(lines) if "..." in line), len(lines))
+                lines = lines[:ellipsis_index]
+                
+                # Remove empty lines
+                lines = [line for line in lines if line.strip()]
+
+                print(lines)
+                random_line = random.choice(lines)
+                await interaction.response.send_message(f"*{random_line}* - **{track_name}** ")
+            else:
+                await interaction.response.send_message(f"Lyrics not found for song {track_name}")
+        else:
+            await interaction.response.send_message("No songs found for the artist.")
+    else:
+        await interaction.response.send_message("API request failed.")
 
 @client.event
 async def on_ready():
