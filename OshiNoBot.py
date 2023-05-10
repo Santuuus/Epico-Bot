@@ -24,6 +24,7 @@ async def wednesday(interaction):
         await interaction.channel.send("https://tenor.com/view/oshi-no-ko-oshi-no-ko-wednesday-ai-hoshino-gif-1982692928935415089")
     else:
         await interaction.response.send_message("It is not Oshi No Ko Wednesday.")
+        await interaction.channel.send("https://tenor.com/view/ruby-hoshino-oshi-no-ko-anime-tears-crying-gif-16026934856871427303")
 
 #Time until next Oshi No Ko episode
 @tree.command(name="next-episode", description="Time until the next episode?")
@@ -64,7 +65,7 @@ async def next_episode(interaction):
     else:
         await interaction.response.send_message(f"Time remaining: {remaining_hours} hour(s) and {remaining_minutes} minute(s)")
 
-@tree.command(name="conan-gray", description="Get a random line from a Conan Gray song (first 30%\ of the lyrics because API))")
+@tree.command(name="conan-gray", description="Get a random line from a Conan Gray song (first 30% of the lyrics because API)")
 async def conan_gray(interaction):
     artist_name = "Conan Gray"
     # Make the request to the Musixmatch API to search for Conan Gray's songs
@@ -97,7 +98,6 @@ async def conan_gray(interaction):
                 # Remove empty lines
                 lines = [line for line in lines if line.strip()]
 
-                print(lines)
                 random_line = random.choice(lines)
                 await interaction.response.send_message(f"*{random_line}* - **{track_name}** ")
             else:
