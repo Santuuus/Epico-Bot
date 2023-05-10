@@ -1,2 +1,2 @@
-# AniMAL
-A bot that updates your MAL and Anilist simultaneously.
+# Oshi No Ko Wednesday
+A bot that provides information regarding the anime Oshi No Ko.
