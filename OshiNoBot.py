@@ -65,5 +65,9 @@ async def on_ready():
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Oshi No Ko"))
     print("Ready!")
 
+@client.event
+async def on_message(message):
+    if client.user.mentioned_in(message):
+        await message.channel.send("Oshi No Ko Reference")
 
 client.run(TOKEN)
