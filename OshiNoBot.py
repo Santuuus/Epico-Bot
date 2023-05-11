@@ -110,6 +110,11 @@ async def lyrics(interaction, artist_name: str):
 async def roy(interaction):
     await interaction.response.send_message(file=discord.File("assets/royreaction.png"))
 
+#Quaso
+@tree.command(name="quaso", description="QUASO")
+async def roy(interaction):
+    await interaction.response.send_message(file=discord.File("assets/quaso.png"))
+
 #Start the bot
 @client.event
 async def on_ready():
