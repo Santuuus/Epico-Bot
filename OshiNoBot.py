@@ -61,6 +61,7 @@ async def next_episode(interaction):
     else:
         await interaction.response.send_message(f"Time remaining: {remaining_hours} hour(s) and {remaining_minutes} minute(s)")
 
+#Get a random line from a song of the selected artist
 @tree.command(name="lyrics", description="Get a random line from a song of the selected artist (first 30% of the lyrics because API)")
 @app_commands.describe(artist_name = "The name of the artist")
 async def lyrics(interaction, artist_name: str):
@@ -113,6 +114,8 @@ async def on_ready():
 @client.event
 async def on_message(message):
     if client.user.mentioned_in(message):
+        if message.mention_everyone:
+            return
         await message.channel.send("Oshi No Ko Reference")
 
 client.run(TOKEN)
