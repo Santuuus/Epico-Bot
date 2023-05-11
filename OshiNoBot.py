@@ -105,12 +105,19 @@ async def lyrics(interaction, artist_name: str):
     else:
         await interaction.response.send_message("API Error")
 
+#Live ROY reaction
+@tree.command(name="roy", description="Live ROY reaction")
+async def roy(interaction):
+    await interaction.response.send_message(file=discord.File("assets/royreaction.png"))
+
+#Start the bot
 @client.event
 async def on_ready():
     await tree.sync()
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Oshi No Ko"))
     print("Ready!")
 
+#Responds to mentions
 @client.event
 async def on_message(message):
     if client.user.mentioned_in(message):
@@ -118,4 +125,5 @@ async def on_message(message):
             return
         await message.channel.send("Oshi No Ko Reference")
 
+#Run
 client.run(TOKEN)
