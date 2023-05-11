@@ -1,13 +1,9 @@
-import datetime
 import discord
-import requests
+import datetime
 import random
-import os
-import re
-import schedule
-from config import TOKEN, MUSIXTOKEN
+import requests
 from discord import app_commands
-from discord.ext import tasks
+from config import TOKEN, MUSIXTOKEN
 
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
@@ -65,11 +61,10 @@ async def next_episode(interaction):
     else:
         await interaction.response.send_message(f"Time remaining: {remaining_hours} hour(s) and {remaining_minutes} minute(s)")
 
-@tree.command(name="conan-gray", description="Get a random line from a Conan Gray song (first 30% of the lyrics because API)")
-async def conan_gray(interaction):
-    artist_name = "Conan Gray"
-    # Make the request to the Musixmatch API to search for Conan Gray's songs
-    url = f"http://api.musixmatch.com/ws/1.1/track.search?apikey={MUSIXTOKEN}&q_artist={artist_name}"
+@tree.command(name="lyrics", description="Get a random line from a song of the selected artist (first 30% of the lyrics because API)")
+@app_commands.describe(artist_name = "The name of the artist")
+async def lyrics(interaction, artist_name: str):
+    url = f"http://api.musixmatch.com/ws/1.1/track.search?apikey={MUSIXTOKEN}&q_artist={artist_name}&page_size=500&f_has_lyrics=1"
     response = requests.get(url)
     data = response.json()
 
@@ -78,9 +73,9 @@ async def conan_gray(interaction):
         track_list = data["message"]["body"]["track_list"]
         
         if track_list:
-            # Select a random song from the track list
-            random_track = random.choice(track_list)
-            track_name = random_track["track"]["track_name"]
+            # Select a random song from the list
+            track = random.choice(track_list)
+            track_name = track["track"]["track_name"]
             
             # Make the request to the Musixmatch API to get the lyrics of the selected song
             url = f"http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey={MUSIXTOKEN}&q_track={track_name}&q_artist={artist_name}"
@@ -103,9 +98,11 @@ async def conan_gray(interaction):
             else:
                 await interaction.response.send_message(f"Lyrics not found for song {track_name}")
         else:
-            await interaction.response.send_message("No songs found for the artist.")
+            await interaction.response.send_message(f"No songs found for {artist_name}.")
+    elif data["message"]["header"]["status_code"] == 404:
+        await interaction.response.send_message(f"Artist {artist_name} not found.")
     else:
-        await interaction.response.send_message("API request failed.")
+        await interaction.response.send_message("API Error")
 
 @client.event
 async def on_ready():
