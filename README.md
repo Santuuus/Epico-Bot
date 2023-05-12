@@ -6,3 +6,5 @@ A bot that provides information regarding the anime Oshi No Ko.
 - `/next-episode` - Time until the next episode of Oshi No Ko?
 - `/lyrics {artist}` - Get a random lyric of the artist.
 - `/roy` - Live ROY reaction.
+- `/quaso` - Quaso
+- `/get-real` - Get real
