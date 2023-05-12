@@ -77,6 +77,7 @@ async def lyrics(interaction, artist_name: str):
             # Select a random song from the list
             track = random.choice(track_list)
             track_name = track["track"]["track_name"]
+            artist = track["track"]["artist_name"]
             
             # Make the request to the Musixmatch API to get the lyrics of the selected song
             url = f"http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey={MUSIXTOKEN}&q_track={track_name}&q_artist={artist_name}"
@@ -95,7 +96,7 @@ async def lyrics(interaction, artist_name: str):
                 lines = [line for line in lines if line.strip()]
 
                 random_line = random.choice(lines)
-                await interaction.response.send_message(f"*{random_line}* - **{track_name}** ")
+                await interaction.response.send_message(f"*{random_line}* - **{track_name} by {artist}** ")
             else:
                 await interaction.response.send_message(f"Lyrics not found for song {track_name}")
         else:
