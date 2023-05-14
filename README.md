@@ -1,5 +1,5 @@
-# Oshi No Bot
-A bot that provides information regarding the anime Oshi No Ko.
+# Ryo No Ko
+A bot that provides information regarding the anime Oshi No Ko and other commands.
 
 ## Commands
 - `/oshi-no-ko-wednesday` - Is it Oshi No Ko wednesday, my dudes?
