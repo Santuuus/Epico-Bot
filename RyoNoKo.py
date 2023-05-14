@@ -153,7 +153,7 @@ async def on_error(interaction, error):
 @client.event
 async def on_ready():
     await tree.sync()
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Oshi No Ko"))
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Ryo playing Bass"))
     global start_time 
     start_time = datetime.datetime.now()
     print("Ready!")
