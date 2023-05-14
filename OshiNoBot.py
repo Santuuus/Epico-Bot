@@ -5,7 +5,7 @@ import requests
 from discord import app_commands
 from config import TOKEN, MUSIXTOKEN
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
@@ -127,10 +127,13 @@ async def roy(interaction):
 #Bot uptime
 @tree.command(name="uptime", description="Bot uptime")
 async def uptime(interaction):
-    #calculate uptime
-    uptime = datetime.datetime.now() - start_time
-    #send message
-    await interaction.response.send_message(f"Uptime: {uptime.seconds // 3600} hour(s), and {(uptime.seconds % 3600) // 60} minute(s) and {uptime.seconds % 60} second(s)")
+    if interaction.user.id == 282662959241756683:
+        await interaction.response.send_message("Uptime: maior que o do <@1099352698572243007>")
+    else:
+        #calculate uptime
+        uptime = datetime.datetime.now() - start_time
+        #send message
+        await interaction.response.send_message(f"Uptime: {uptime.seconds // 3600} hour(s), and {(uptime.seconds % 3600) // 60} minute(s) and {uptime.seconds % 60} second(s)")
 
 #Get Real
 @tree.command(name="get-real", description="Get Real")
@@ -145,6 +148,7 @@ async def on_error(interaction, error):
     else:
         raise error
 
+
 #Start the bot
 @client.event
 async def on_ready():
@@ -157,10 +161,16 @@ async def on_ready():
 #Responds to mentions
 @client.event
 async def on_message(message):
-    if client.user.mentioned_in(message):
+    if client.user.mentioned_in(message) and message.author.id != 1099352698572243007:
         if message.mention_everyone:
             return
-        await message.channel.send("Oshi No Ko Reference")
+        await message.reply("Oshi No Ko Reference")
+    elif message.author.id == 1099352698572243007:
+        #if message contains "precisas de ajuda"
+        if "precisas de ajuda" in message.content.lower():
+            await message.reply("Preciso que te cales <a:peperonimo:1101073938039177350>")
+
+        
 
 #Run
 client.run(TOKEN)

@@ -8,3 +8,4 @@ A bot that provides information regarding the anime Oshi No Ko.
 - `/roy` - Live ROY reaction.
 - `/quaso` - Quaso
 - `/get-real` - Get real
+- `/uptime`- How long the bot has been running.
