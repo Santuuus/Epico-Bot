@@ -66,53 +66,53 @@ async def next_episode(interaction):
 @app_commands.describe(artist_name = "The name of the artist")
 @app_commands.checks.cooldown(1, 30, key=lambda i: i.user.id)
 async def lyrics(interaction, artist_name: str):
-   #await interaction.response.send_message("Currently unavailable.")
+   await interaction.response.send_message("Currently unavailable.", ephemeral=True)
 
-    url = f"http://api.musixmatch.com/ws/1.1/track.search?apikey={MUSIXTOKEN}&q_artist={artist_name}&page_size=500&f_has_lyrics=1"
-    print(f"Get tracks: {url}")
-    response = requests.get(url)
-    data = response.json()
+    # url = f"http://api.musixmatch.com/ws/1.1/track.search?apikey={MUSIXTOKEN}&q_artist={artist_name}&page_size=500&f_has_lyrics=1"
+    # print(f"Get tracks: {url}")
+    # response = requests.get(url)
+    # data = response.json()
 
-    # Check if songs were found
-    if data["message"]["header"]["status_code"] == 200:
-        track_list = data["message"]["body"]["track_list"]
+    # # Check if songs were found
+    # if data["message"]["header"]["status_code"] == 200:
+    #     track_list = data["message"]["body"]["track_list"]
         
-        if track_list:
-            # Select a random song from the list
-            track = random.choice(track_list)
-            track_name = track["track"]["track_name"]
-            artist = track["track"]["artist_name"]
+    #     if track_list:
+    #         # Select a random song from the list
+    #         track = random.choice(track_list)
+    #         track_name = track["track"]["track_name"]
+    #         artist = track["track"]["artist_name"]
             
-            # Make the request to the Musixmatch API to get the lyrics of the selected song
-            url = f"http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey={MUSIXTOKEN}&q_track={track_name}&q_artist={artist_name}"
-            print(f"Get lyrics: {url}")
-            response = requests.get(url)
-            data = response.json()
+    #         # Make the request to the Musixmatch API to get the lyrics of the selected song
+    #         url = f"http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey={MUSIXTOKEN}&q_track={track_name}&q_artist={artist_name}"
+    #         print(f"Get lyrics: {url}")
+    #         response = requests.get(url)
+    #         data = response.json()
             
-            # Check if lyrics were found
-            if data["message"]["header"]["status_code"] == 200:
-                if "lyrics" in data["message"]["body"]:
-                    lyrics = data["message"]["body"]["lyrics"]["lyrics_body"]
-                    # Remove the final part of the lyrics starting from a line with "..."
-                    lines = lyrics.split("\n")
-                    ellipsis_index = next((i for i, line in enumerate(lines) if "..." in line), len(lines))
-                    lines = lines[:ellipsis_index]
+    #         # Check if lyrics were found
+    #         if data["message"]["header"]["status_code"] == 200:
+    #             if "lyrics" in data["message"]["body"]:
+    #                 lyrics = data["message"]["body"]["lyrics"]["lyrics_body"]
+    #                 # Remove the final part of the lyrics starting from a line with "..."
+    #                 lines = lyrics.split("\n")
+    #                 ellipsis_index = next((i for i, line in enumerate(lines) if "..." in line), len(lines))
+    #                 lines = lines[:ellipsis_index]
                     
-                    # Remove empty lines
-                    lines = [line for line in lines if line.strip()]
-                    if lines:
-                        random_line = random.choice(lines)
-                        await interaction.response.send_message(f"*{random_line}* - **{track_name} by {artist}** ")
-                    else:
-                        await interaction.response.send_message(f"No lyrics found for song {track_name}")
-            else:
-                await interaction.response.send_message(f"Lyrics not found for song {track_name}")
-        else:
-            await interaction.response.send_message(f"No songs found for {artist_name}.")
-    elif data["message"]["header"]["status_code"] == 404:
-        await interaction.response.send_message(f"Artist {artist_name} not found.")
-    else:
-        await interaction.response.send_message("API Error")
+    #                 # Remove empty lines
+    #                 lines = [line for line in lines if line.strip()]
+    #                 if lines:
+    #                     random_line = random.choice(lines)
+    #                     await interaction.response.send_message(f"*{random_line}* - **{track_name} by {artist}** ")
+    #                 else:
+    #                     await interaction.response.send_message(f"No lyrics found for song {track_name}")
+    #         else:
+    #             await interaction.response.send_message(f"Lyrics not found for song {track_name}")
+    #     else:
+    #         await interaction.response.send_message(f"No songs found for {artist_name}.")
+    # elif data["message"]["header"]["status_code"] == 404:
+    #     await interaction.response.send_message(f"Artist {artist_name} not found.")
+    # else:
+    #     await interaction.response.send_message("API Error")
 
 #Live ROY reaction
 @tree.command(name="roy", description="Live ROY reaction")
@@ -123,6 +123,14 @@ async def roy(interaction):
 @tree.command(name="quaso", description="QUASO")
 async def roy(interaction):
     await interaction.response.send_message(file=discord.File("assets/quaso.png"))
+
+#Bot uptime
+@tree.command(name="uptime", description="Bot uptime")
+async def uptime(interaction):
+    #calculate uptime
+    uptime = datetime.datetime.now() - start_time
+    #send message
+    await interaction.response.send_message(f"Uptime: {uptime.seconds // 3600} hour(s), and {(uptime.seconds % 3600) // 60} minute(s) and {uptime.seconds % 60} second(s)")
 
 #Get Real
 @tree.command(name="get-real", description="Get Real")
@@ -142,6 +150,8 @@ async def on_error(interaction, error):
 async def on_ready():
     await tree.sync()
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Oshi No Ko"))
+    global start_time 
+    start_time = datetime.datetime.now()
     print("Ready!")
 
 #Responds to mentions
