@@ -133,7 +133,10 @@ async def uptime(interaction):
         #calculate uptime
         uptime = datetime.datetime.now() - start_time
         #send message
-        await interaction.response.send_message(f"Uptime: {uptime.seconds // 3600} hour(s), and {(uptime.seconds % 3600) // 60} minute(s) and {uptime.seconds % 60} second(s)")
+        if uptime.days < 1:
+            await interaction.response.send_message(f"Uptime: {uptime.seconds // 3600} hour(s), {uptime.seconds % 3600 // 60} minute(s) and {uptime.seconds % 3600 % 60} second(s)")
+        else:
+            await interaction.response.send_message(f"Uptime: {uptime.days} day(s), {uptime.seconds // 3600} hour(s), {uptime.seconds % 3600 // 60} minute(s) and {uptime.seconds % 3600 % 60} second(s)")
 
 #Get Real
 @tree.command(name="get-real", description="Get Real")
@@ -168,7 +171,9 @@ async def on_message(message):
     elif message.author.id == 1099352698572243007:
         #if message contains "precisas de ajuda"
         if "precisas de ajuda" in message.content.lower():
-            await message.reply("Preciso que te cales <a:peperonimo:1101073938039177350>")
+            await message.reply("Preciso que te cales <a:peperonimo:1101073938039177350>", mention_author=False)
+        if "stay malding bozo" in message.content.lower():
+            await message.reply("Mald deez nuts.", mention_author=False)
 
         
 
