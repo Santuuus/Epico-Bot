@@ -3,6 +3,7 @@ import datetime
 import random
 import requests
 from discord import app_commands
+from discord.ext import tasks
 from config import TOKEN, MUSIXTOKEN
 
 intents = discord.Intents.all()
@@ -36,30 +37,12 @@ async def next_episode(interaction):
 
     # Set the target time as 3 PM
     target_time = datetime.time(15, 0, 0)
-
-    # Check if the current day is Wednesday and it's already past 3 PM
-    if current_weekday == 2 and current_datetime.time() > target_time:
-        # Add 7 days to find the next Wednesday
-        days_until_next_wednesday += 7
-
-    # Create the target datetime by combining the next Wednesday and target time
-    next_wednesday = current_datetime + datetime.timedelta(days=days_until_next_wednesday)
-    target_datetime = datetime.datetime.combine(next_wednesday.date(), target_time)
-
-    # Calculate the time difference between the current datetime and the target datetime
-    time_difference = target_datetime - current_datetime
-
-    # Extract the remaining days, hours, and minutes from the time difference
-    remaining_days = time_difference.days
-    remaining_seconds = time_difference.seconds
-    remaining_hours = remaining_seconds // 3600
-    remaining_minutes = (remaining_seconds % 3600) // 60
+    
+    #Get Unix timestamp for next wednesday at 3 PM
+    target_timestamp = datetime.datetime.combine(current_datetime.date() + datetime.timedelta(days=days_until_next_wednesday), target_time).timestamp()
 
     # Print the remaining time
-    if remaining_days > 0:
-        await interaction.response.send_message(f"Time remaining: {remaining_days} day(s), {remaining_hours} hour(s), and {remaining_minutes} minute(s)")
-    else:
-        await interaction.response.send_message(f"Time remaining: {remaining_hours} hour(s) and {remaining_minutes} minute(s)")
+    await interaction.response.send_message(f"Next episode: <t:{int(target_timestamp)}:R>")
 
 #Get a random line from a song of the selected artist
 @tree.command(name="lyrics", description="Get a random line from a song of the selected artist (first 30% of the lyrics because API)")
@@ -174,8 +157,7 @@ async def on_message(message):
             await message.reply("Preciso que te cales <a:peperonimo:1101073938039177350>", mention_author=False)
         if "stay malding bozo" in message.content.lower():
             await message.reply("Mald deez nuts.", mention_author=False)
-
-        
+     
 
 #Run
 client.run(TOKEN)
