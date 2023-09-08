@@ -6,3 +6,4 @@ assets/
 poetry.lock
 pyproject.toml
 replit.nix
+.cache
