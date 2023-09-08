@@ -1,5 +1,5 @@
-from responses.resp import Responses
-from functions.func import Functions
+from resp import Responses
+from func import Functions
 import discord, wavelink, spotipy, lyricsgenius
 from spotipy import SpotifyClientCredentials
 from config import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, GENIUS_API_KEY
