@@ -14,10 +14,11 @@ client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
 
 #Commands
-#on user join
+#on user join send message to welcome channel
 @client.event
 async def on_member_join(member):
-    await member.send(file=discord.File('assets/epico.jpeg', content="{member.mention} és Épico!"))
+    channel = client.get_channel(1149671217322786857)
+    await channel.send(file=discord.File('assets/epico.jpeg', content=f"{member.mention} és Épico!"))
 
 
 #Start the bot
