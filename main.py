@@ -18,7 +18,7 @@ tree = app_commands.CommandTree(client)
 @client.event
 async def on_member_join(member):
     channel = client.get_channel(1149671217322786857)
-    await channel.send(file=discord.File('assets/epico.jpeg', content=f"{member.mention} és Épico!"))
+    await channel.send(f"{member.mention} és Épico!", file=discord.File('assets/epico.jpeg'))
 
 
 #Start the bot
